@@ -1,5 +1,5 @@
 import { FileManager } from "./fileManager.js";
-import { parseCommand, Command } from "./commands.js";
+import { parseCommand, CommandName } from "./commands.js";
 
 const close = (username) => {
     console.log(`\nThank you for using File Manager, ${username}, goodbye!`);
@@ -15,11 +15,16 @@ const handleInput = (chunk) => {
     try {
         let command = parseCommand(chunkString);
 
-        if (command.command === Command.up) {
+        if (command.name.equals(CommandName.up)) {
             fileManager.up();
+        } else if (command.name.equals(CommandName.cd)) {
+
+        }
+        else {
+            throw new Error(`Unknown command: ${command.name.rawValue} ${command.arguments}`);
         }
     } catch(error) {
-        console.log(`Invalid input ${error}`);
+        console.log(`Invalid input. ${error}`);
     }
 
     console.log(`You are currently in ${fileManager.currentPath}`);
@@ -29,7 +34,7 @@ let fileManager = new FileManager();
 
 let username = 'Anonymous';
 
-if (process.argv.length >= 2) {
+if (process.argv.length > 2) {
     let usernameArg = process.argv[2].split('=');
     if (usernameArg.length == 2) {
         username = usernameArg[1]

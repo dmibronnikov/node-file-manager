@@ -1,8 +1,13 @@
-export class Command {
-    static up = new Command('up');
+export class CommandName {
+    static up = new CommandName('up');
+    static ls = new CommandName('cd');
 
     constructor(rawValue) {
         this.rawValue = rawValue;
+    }
+
+    equals(otherCommand) {
+        return otherCommand instanceof CommandName && this.rawValue === otherCommand.rawValue;
     }
 }
 
@@ -13,13 +18,8 @@ export const parseCommand = (commandString) => {
         throw new Error('invalid input');
     }
 
-    switch (splitted[0]) {
-        case Command.up.rawValue:
-            return {
-                command: Command.up,
-                arguments: splitted.slice(1)
-            };
-        default:
-            throw new Error('invalid input');
-    }
+    return {
+        name: new CommandName(splitted[0]),
+        arguments: splitted.slice(1)
+    };
 };
