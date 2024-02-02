@@ -6,7 +6,7 @@ const close = (username) => {
     process.exit(0);
 }
 
-const handleInput = (chunk) => {
+const handleInput = async (chunk) => {
     let chunkString = chunk.toString();
     if (chunkString.includes('.exit')) {
         close(username);
@@ -18,7 +18,10 @@ const handleInput = (chunk) => {
         if (command.name.equals(CommandName.up) && command.arguments.length == 0) {
             fileManager.up();
         } else if (command.name.equals(CommandName.cd) && command.arguments.length == 1) {
-            fileManager.cd(command.arguments[0]);
+            await fileManager.changePath(command.arguments[0]);
+        } else if (command.name.equals(CommandName.ls) && command.arguments.length == 0) {
+            let directoryContents = await fileManager.directoryContents();
+            console.log(directoryContents);
         }
         else {
             throw new Error(`[incorrect command] ${command.name.rawValue} ${command.arguments}`);
@@ -32,6 +35,12 @@ const handleInput = (chunk) => {
     }
 
     console.log(`You are currently in ${fileManager.currentPath}`);
+};
+
+const listenToStdIn = async () => {
+    for await (const chunk of process.stdin) {
+        await handleInput(chunk);
+    }
 };
 
 let fileManager = new FileManager();
@@ -52,4 +61,4 @@ process.on('SIGINT', () => {
     close(username);
 });
 
-process.stdin.on('data', handleInput);
+listenToStdIn();

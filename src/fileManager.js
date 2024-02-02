@@ -1,6 +1,6 @@
 import { homedir } from 'os';
 import { resolve as resolvePath, normalize as normalizePath, join as joinPath, isAbsolute } from 'path';
-import { existsSync } from 'fs';
+import { readdir, access } from 'fs/promises';
 
 export class FileManagerError extends Error { }
 
@@ -13,14 +13,19 @@ export class FileManager {
         this.currentPath = normalizePath(joinPath(this.currentPath, '..'));
     }
 
-    cd(path) {
+    async changePath(path) {
         let normalizedPath = normalizePath(path);
         let newPath = isAbsolute(normalizedPath) ? normalizedPath : resolvePath(this.currentPath, normalizedPath);
 
-        if (existsSync(newPath)) {
+        try {
+            await access(newPath);
             this.currentPath = newPath;
-        } else {
+        } catch {
             throw new FileManagerError('Incorrect path');
         }
+    }
+
+    async directoryContents() {
+        return await readdir(this.currentPath, { withFileTypes: true });
     }
 }
