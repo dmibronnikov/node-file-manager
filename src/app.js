@@ -1,4 +1,4 @@
-import { FileManager } from "./fileManager.js";
+import { FileManager, FileManagerError } from "./fileManager.js";
 import { parseCommand, CommandName } from "./commands.js";
 
 const close = (username) => {
@@ -15,16 +15,20 @@ const handleInput = (chunk) => {
     try {
         let command = parseCommand(chunkString);
 
-        if (command.name.equals(CommandName.up)) {
+        if (command.name.equals(CommandName.up) && command.arguments.length == 0) {
             fileManager.up();
-        } else if (command.name.equals(CommandName.cd)) {
-
+        } else if (command.name.equals(CommandName.cd) && command.arguments.length == 1) {
+            fileManager.cd(command.arguments[0]);
         }
         else {
-            throw new Error(`Unknown command: ${command.name.rawValue} ${command.arguments}`);
+            throw new Error(`[incorrect command] ${command.name.rawValue} ${command.arguments}`);
         }
     } catch(error) {
-        console.log(`Invalid input. ${error}`);
+        if (error instanceof FileManagerError) {
+            console.log(`Operation failed. ${error}`);
+        } else {
+            console.log(`Invalid input. ${error}`);
+        }
     }
 
     console.log(`You are currently in ${fileManager.currentPath}`);

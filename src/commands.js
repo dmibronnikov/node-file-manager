@@ -1,6 +1,6 @@
 export class CommandName {
     static up = new CommandName('up');
-    static ls = new CommandName('cd');
+    static cd = new CommandName('cd');
 
     constructor(rawValue) {
         this.rawValue = rawValue;
