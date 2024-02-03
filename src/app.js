@@ -63,9 +63,9 @@ const handleInput = async (chunk) => {
         }
     } catch(error) {
         if (error instanceof OperationError) {
-            console.log(`Operation failed. ${error}`);
+            console.log(`Operation failed`);
         } else {
-            console.log(`Invalid input. ${error}`);
+            console.log(`Invalid input`);
         }
     }
 
