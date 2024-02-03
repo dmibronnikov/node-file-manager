@@ -16,14 +16,24 @@ export class CommandName {
 }
 
 export const parseCommand = (commandString) => {
-    let splitted = commandString.replace(/(\r\n|\n|\r)/gm, '').replace(/\s+/g," ").split(' ');
+    let splitted = commandString.matchAll(/[^\s"']+|"([^"]*)"|'([^']*)'/g);
+    let cleaned = []
+    for (const value of splitted) {
+        if (value[2] !== undefined) {
+            cleaned.push(value[2]);
+        } else if (value[1] !== undefined) {
+            cleaned.push(value[1]);
+        } else {
+            cleaned.push(value[0]);
+        }
+    }
 
-    if (splitted.length < 1) {
+    if (cleaned.length < 1) {
         throw new Error('invalid input');
     }
 
     return {
-        name: new CommandName(splitted[0]),
-        arguments: splitted.slice(1)
+        name: new CommandName(cleaned[0]),
+        arguments: cleaned.slice(1)
     };
 };
