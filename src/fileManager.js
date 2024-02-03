@@ -78,4 +78,9 @@ export class FileManager {
         let absolutePath = this.#absolutePath(path);
         await deleteFile(absolutePath);
     }
+
+    async moveFile(pathToFile, pathToDirectory) {
+        await this.copyFile(pathToFile, pathToDirectory);
+        await this.deleteFile(pathToFile);
+    }
 }

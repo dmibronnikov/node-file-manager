@@ -40,6 +40,8 @@ const handleInput = async (chunk) => {
             await fileManager.copyFile(command.arguments[0], command.arguments[1]);
         } else if (command.name.equals(CommandName.rm) && command.arguments.length == 1) {
             await fileManager.deleteFile(command.arguments[0]);
+        } else if (command.name.equals(CommandName.mv) && command.arguments.length == 2) {
+            await fileManager.moveFile(command.arguments[0], command.arguments[1]);
         }
         else {
             throw new Error(`[incorrect command] ${command.name.rawValue} ${command.arguments}`);
