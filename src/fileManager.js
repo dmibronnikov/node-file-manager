@@ -7,7 +7,7 @@ import { resolve as resolvePath,
          extname 
         } from 'path';
 import { readdir, access } from 'fs/promises';
-import { copyFile, moveFile, newFile, readFileStream } from './FileOperations.js';
+import { copyFile, deleteFile, moveFile, newFile, readFileStream } from './FileOperations.js';
 import { FileOperationError, PathOperationError } from './errors.js';
 
 export class FileManager {
@@ -70,11 +70,12 @@ export class FileManager {
             throw new FileOperationError('Provided path is not a directory');
         }
 
-        try {
-            let filename = basename(absolutePathToFile);
-            await copyFile(absolutePathToFile, joinPath(absolutePathToDirectory, filename));
-        } catch (error) {
-            throw new FileOperationError(error.message, error);
-        }
+        let filename = basename(absolutePathToFile);
+        await copyFile(absolutePathToFile, joinPath(absolutePathToDirectory, filename));
+    }
+
+    async deleteFile(path) {
+        let absolutePath = this.#absolutePath(path);
+        await deleteFile(absolutePath);
     }
 }

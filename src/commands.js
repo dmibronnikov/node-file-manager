@@ -6,6 +6,7 @@ export class CommandName {
     static add = new CommandName('add');
     static rn = new CommandName('rn');
     static cp = new CommandName('cp');
+    static rm = new CommandName('rm');
 
     constructor(rawValue) {
         this.rawValue = rawValue;

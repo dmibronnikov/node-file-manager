@@ -1,5 +1,5 @@
 import { createReadStream, createWriteStream } from 'fs';
-import { open, rename } from 'fs/promises';
+import { open, rename, rm } from 'fs/promises';
 import { FileOperationError } from './errors.js';
 import { pipeline } from 'stream/promises';
 
@@ -33,6 +33,14 @@ export const moveFile = async (oldPath, newPath) => {
 export const copyFile = async (oldPath, newPath) => {
     try {
         await pipeline(createReadStream(oldPath), createWriteStream(newPath));
+    } catch (error) {
+        throw new FileOperationError(error.message, error);
+    }
+}
+
+export const deleteFile = async (path) => {
+    try {
+        await rm(path);
     } catch (error) {
         throw new FileOperationError(error.message, error);
     }
