@@ -30,7 +30,7 @@ const handleInput = async (chunk) => {
                 await pipeline(fileStream, process.stdout, { end: false });
                 process.stdout.write('\n');
             } catch (error) {
-                throw new FileOperationError(error);
+                throw new FileOperationError(error.message, error);
             }
         } else if (command.name.equals(CommandName.add) && command.arguments.length == 1) {
             await fileManager.createFile(command.arguments[0]);

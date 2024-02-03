@@ -14,7 +14,7 @@ export class FileManager {
             let normalizedPath = normalizePath(path);
             return isAbsolute(normalizedPath) ? normalizedPath : resolvePath(this.currentPath, normalizedPath);
         } catch (error) {
-            throw new PathOperationError(error)
+            throw new PathOperationError(error.message, error)
         }
     }
 
