@@ -1,7 +1,13 @@
 import { homedir } from 'os';
-import { resolve as resolvePath, normalize as normalizePath, join as joinPath, isAbsolute, basename, parse } from 'path';
+import { resolve as resolvePath, 
+         normalize as normalizePath, 
+         join as joinPath, 
+         isAbsolute, 
+         basename, 
+         extname 
+        } from 'path';
 import { readdir, access } from 'fs/promises';
-import { moveFile, newFile, readFileStream } from './FileOperations.js';
+import { copyFile, moveFile, newFile, readFileStream } from './FileOperations.js';
 import { FileOperationError, PathOperationError } from './errors.js';
 
 export class FileManager {
@@ -54,5 +60,21 @@ export class FileManager {
         let newPath = joinPath(resolvePath(oldPath, '..'), basename(normalizePath(filename)));
 
         await moveFile(oldPath, newPath);
+    }
+
+    async copyFile(pathToFile, pathToDirectory) {
+        let absolutePathToFile = this.#absolutePath(pathToFile);
+        let absolutePathToDirectory = this.#absolutePath(pathToDirectory);
+
+        if (!!extname(absolutePathToDirectory)) {
+            throw new FileOperationError('Provided path is not a directory');
+        }
+
+        try {
+            let filename = basename(absolutePathToFile);
+            await copyFile(absolutePathToFile, joinPath(absolutePathToDirectory, filename));
+        } catch (error) {
+            throw new FileOperationError(error.message, error);
+        }
     }
 }

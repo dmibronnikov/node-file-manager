@@ -1,6 +1,7 @@
 import { createReadStream, createWriteStream } from 'fs';
 import { open, rename } from 'fs/promises';
 import { FileOperationError } from './errors.js';
+import { pipeline } from 'stream/promises';
 
 export const readFileStream = (path) => {
     try {
