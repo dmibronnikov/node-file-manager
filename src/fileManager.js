@@ -9,6 +9,7 @@ import { resolve as resolvePath,
 import { readdir, access } from 'fs/promises';
 import { copyFile, deleteFile, moveFile, newFile, readFileStream } from './FileOperations.js';
 import { FileOperationError, PathOperationError } from './errors.js';
+import { hash } from './hashOperations.js';
 
 export class FileManager {
     constructor() {
@@ -82,5 +83,10 @@ export class FileManager {
     async moveFile(pathToFile, pathToDirectory) {
         await this.copyFile(pathToFile, pathToDirectory);
         await this.deleteFile(pathToFile);
+    }
+
+    async calculateFileHash(path) {
+        let absolutePath = this.#absolutePath(path);
+        return await hash(absolutePath);
     }
 }

@@ -9,6 +9,7 @@ export class CommandName {
     static rm = new CommandName('rm');
     static mv = new CommandName('mv');
     static os = new CommandName('os');
+    static hash = new CommandName('hash');
 
     constructor(rawValue) {
         this.rawValue = rawValue;

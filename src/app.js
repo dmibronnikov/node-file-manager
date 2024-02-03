@@ -51,6 +51,9 @@ const handleInput = async (chunk) => {
             } else {
                 console.log(result.data);
             }
+        } else if (command.name.equals(CommandName.hash), command.arguments.length == 1) {
+            let hash = await fileManager.calculateFileHash(command.arguments[0]);
+            console.log(hash);
         }
         else {
             throw new Error(`[incorrect command] ${command.name.rawValue} ${command.arguments}`);
