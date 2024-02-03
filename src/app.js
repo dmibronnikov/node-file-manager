@@ -2,6 +2,7 @@ import { FileManager } from "./fileManager.js";
 import { parseCommand, CommandName } from "./commands.js";
 import { pipeline } from 'stream/promises';
 import { FileOperationError, OperationError } from "./errors.js";
+import { systemInfo } from "./operatingSystemInfo.js";
 
 const close = () => {
     console.log(`\nThank you for using File Manager, ${username}, goodbye!`);
@@ -42,6 +43,14 @@ const handleInput = async (chunk) => {
             await fileManager.deleteFile(command.arguments[0]);
         } else if (command.name.equals(CommandName.mv) && command.arguments.length == 2) {
             await fileManager.moveFile(command.arguments[0], command.arguments[1]);
+        } else if (command.name.equals(CommandName.os) && command.arguments.length == 1) {
+            let result = systemInfo(command.arguments[0]);
+            if (result.type === 'cpus') {
+                console.log(`Overall amount of CPUs = ${result.data.coresCount}`); 
+                console.table(result.data.info);
+            } else {
+                console.log(result.data);
+            }
         }
         else {
             throw new Error(`[incorrect command] ${command.name.rawValue} ${command.arguments}`);
