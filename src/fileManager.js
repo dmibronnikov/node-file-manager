@@ -1,9 +1,8 @@
 import { homedir } from 'os';
 import { resolve as resolvePath, normalize as normalizePath, join as joinPath, isAbsolute } from 'path';
 import { readdir, access } from 'fs/promises';
-import { createReadStream } from 'fs';
-
-export class FileManagerError extends Error { }
+import { readFileStream } from './FileOperations.js';
+import { PathOperationError } from './errors.js';
 
 export class FileManager {
     constructor() {
@@ -11,8 +10,12 @@ export class FileManager {
     }
 
     #absolutePath(path) {
-        let normalizedPath = normalizePath(path);
-        return isAbsolute(normalizedPath) ? normalizedPath : resolvePath(this.currentPath, normalizedPath);
+        try {
+            let normalizedPath = normalizePath(path);
+            return isAbsolute(normalizedPath) ? normalizedPath : resolvePath(this.currentPath, normalizedPath);
+        } catch (error) {
+            throw new PathOperationError(error)
+        }
     }
 
     up() {
@@ -26,7 +29,7 @@ export class FileManager {
             await access(newPath);
             this.currentPath = newPath;
         } catch {
-            throw new FileManagerError('Incorrect path');
+            throw new PathOperationError('Incorrect path');
         }
     }
 
@@ -38,6 +41,6 @@ export class FileManager {
 
     readFileStream(path) {
         let absolutePath = this.#absolutePath(path);
-        return createReadStream(absolutePath, 'utf-8');
+        return readFileStream(absolutePath);
     }
 }

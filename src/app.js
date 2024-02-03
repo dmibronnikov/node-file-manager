@@ -1,6 +1,7 @@
-import { FileManager, FileManagerError } from "./fileManager.js";
+import { FileManager } from "./fileManager.js";
 import { parseCommand, CommandName } from "./commands.js";
 import { pipeline } from 'stream/promises';
+import { FileOperationError, OperationError } from "./errors.js";
 
 const close = (username) => {
     console.log(`\nThank you for using File Manager, ${username}, goodbye!`);
@@ -24,15 +25,19 @@ const handleInput = async (chunk) => {
             let directoryContents = await fileManager.directoryContents();
             console.table(directoryContents);
         } else if (command.name.equals(CommandName.cat) && command.arguments.length == 1) {
-            let fileStream = fileManager.readFileStream(command.arguments[0]);
-            await pipeline(fileStream, process.stdout, { end: false });
-            process.stdout.write('\n');
+            try {
+                let fileStream = fileManager.readFileStream(command.arguments[0]);
+                await pipeline(fileStream, process.stdout, { end: false });
+                process.stdout.write('\n');
+            } catch (error) {
+                throw new FileOperationError(error);
+            }
         }
         else {
             throw new Error(`[incorrect command] ${command.name.rawValue} ${command.arguments}`);
         }
     } catch(error) {
-        if (error instanceof FileManagerError) {
+        if (error instanceof OperationError) {
             console.log(`Operation failed. ${error}`);
         } else {
             console.log(`Invalid input. ${error}`);
