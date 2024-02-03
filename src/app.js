@@ -3,7 +3,7 @@ import { parseCommand, CommandName } from "./commands.js";
 import { pipeline } from 'stream/promises';
 import { FileOperationError, OperationError } from "./errors.js";
 
-const close = (username) => {
+const close = () => {
     console.log(`\nThank you for using File Manager, ${username}, goodbye!`);
     process.exit(0);
 }
@@ -78,7 +78,7 @@ console.log(`Welcome to the File Manager, ${username}!`);
 console.log(`You are currently in ${fileManager.currentPath}`);
 
 process.on('SIGINT', () => {
-    close(username);
+    close();
 });
 
 listenToStdIn();
