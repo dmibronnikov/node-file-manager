@@ -1,7 +1,7 @@
 import { homedir } from 'os';
 import { resolve as resolvePath, normalize as normalizePath, join as joinPath, isAbsolute } from 'path';
 import { readdir, access } from 'fs/promises';
-import { readFileStream } from './FileOperations.js';
+import { newFile, readFileStream } from './FileOperations.js';
 import { PathOperationError } from './errors.js';
 
 export class FileManager {
@@ -42,5 +42,10 @@ export class FileManager {
     readFileStream(path) {
         let absolutePath = this.#absolutePath(path);
         return readFileStream(absolutePath);
+    }
+
+    async createFile(path) {
+        let absolutePath = this.#absolutePath(path);
+        return newFile(absolutePath);
     }
 }

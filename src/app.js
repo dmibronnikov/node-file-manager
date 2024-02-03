@@ -32,6 +32,8 @@ const handleInput = async (chunk) => {
             } catch (error) {
                 throw new FileOperationError(error);
             }
+        } else if (command.name.equals(CommandName.add) && command.arguments.length == 1) {
+            await fileManager.createFile(command.arguments[0]);
         }
         else {
             throw new Error(`[incorrect command] ${command.name.rawValue} ${command.arguments}`);
