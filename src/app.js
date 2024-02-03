@@ -34,6 +34,8 @@ const handleInput = async (chunk) => {
             }
         } else if (command.name.equals(CommandName.add) && command.arguments.length == 1) {
             await fileManager.createFile(command.arguments[0]);
+        } else if (command.name.equals(CommandName.rn) && command.arguments.length == 2) {
+            await fileManager.renameFile(command.arguments[0], command.arguments[1]);
         }
         else {
             throw new Error(`[incorrect command] ${command.name.rawValue} ${command.arguments}`);

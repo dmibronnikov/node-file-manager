@@ -4,6 +4,7 @@ export class CommandName {
     static ls = new CommandName('ls');
     static cat = new CommandName('cat');
     static add = new CommandName('add');
+    static rn = new CommandName('rn');
 
     constructor(rawValue) {
         this.rawValue = rawValue;

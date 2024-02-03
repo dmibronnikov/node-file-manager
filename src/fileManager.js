@@ -1,8 +1,8 @@
 import { homedir } from 'os';
-import { resolve as resolvePath, normalize as normalizePath, join as joinPath, isAbsolute } from 'path';
+import { resolve as resolvePath, normalize as normalizePath, join as joinPath, isAbsolute, basename, parse } from 'path';
 import { readdir, access } from 'fs/promises';
-import { newFile, readFileStream } from './FileOperations.js';
-import { PathOperationError } from './errors.js';
+import { moveFile, newFile, readFileStream } from './FileOperations.js';
+import { FileOperationError, PathOperationError } from './errors.js';
 
 export class FileManager {
     constructor() {
@@ -46,6 +46,13 @@ export class FileManager {
 
     async createFile(path) {
         let absolutePath = this.#absolutePath(path);
-        return newFile(absolutePath);
+        await newFile(absolutePath);
+    }
+
+    async renameFile(path, filename) {
+        let oldPath = this.#absolutePath(path);
+        let newPath = joinPath(resolvePath(oldPath, '..'), basename(normalizePath(filename)));
+
+        await moveFile(oldPath, newPath);
     }
 }

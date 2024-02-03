@@ -1,5 +1,5 @@
 import { createReadStream } from 'fs';
-import { open } from 'fs/promises';
+import { open, rename } from 'fs/promises';
 import { FileOperationError } from './errors.js';
 
 export const readFileStream = (path) => {
@@ -18,5 +18,13 @@ export const newFile = async (path) => {
         throw new FileOperationError(error);
     } finally {
         await handle?.close();
+    }
+}
+
+export const moveFile = async (oldPath, newPath) => {
+    try {
+        await rename(oldPath, newPath);
+    } catch (error) {
+        throw new FileOperationError(error);
     }
 }
