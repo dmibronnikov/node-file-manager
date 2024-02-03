@@ -51,11 +51,14 @@ const handleInput = async (chunk) => {
             } else {
                 console.log(result.data);
             }
-        } else if (command.name.equals(CommandName.hash), command.arguments.length == 1) {
+        } else if (command.name.equals(CommandName.hash) && command.arguments.length == 1) {
             let hash = await fileManager.calculateFileHash(command.arguments[0]);
             console.log(hash);
-        }
-        else {
+        } else if (command.name.equals(CommandName.compress) && command.arguments.length == 2) {
+            await fileManager.compressFile(command.arguments[0], command.arguments[1]);
+        } else if (command.name.equals(CommandName.decompress) && command.arguments.length == 2) {
+            await fileManager.decompressFile(command.arguments[0], command.arguments[1]);
+        } else {
             throw new Error(`[incorrect command] ${command.name.rawValue} ${command.arguments}`);
         }
     } catch(error) {

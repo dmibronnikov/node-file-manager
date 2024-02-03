@@ -10,6 +10,8 @@ export class CommandName {
     static mv = new CommandName('mv');
     static os = new CommandName('os');
     static hash = new CommandName('hash');
+    static compress = new CommandName('compress');
+    static decompress = new CommandName('decompress');
 
     constructor(rawValue) {
         this.rawValue = rawValue;

@@ -10,6 +10,7 @@ import { readdir, access } from 'fs/promises';
 import { copyFile, deleteFile, moveFile, newFile, readFileStream } from './FileOperations.js';
 import { FileOperationError, PathOperationError } from './errors.js';
 import { hash } from './hashOperations.js';
+import { compressBrotli, decompressBrotli } from './compressOperations.js';
 
 export class FileManager {
     constructor() {
@@ -88,5 +89,19 @@ export class FileManager {
     async calculateFileHash(path) {
         let absolutePath = this.#absolutePath(path);
         return await hash(absolutePath);
+    }
+
+    async compressFile(sourcePath, destinationPath) {
+        let absoluteSourcePath = this.#absolutePath(sourcePath);
+        let absoluteDestinationPath = this.#absolutePath(destinationPath);
+
+        await compressBrotli(absoluteSourcePath, absoluteDestinationPath);
+    }
+
+    async decompressFile(sourcePath, destinationPath) {
+        let absoluteSourcePath = this.#absolutePath(sourcePath);
+        let absoluteDestinationPath = this.#absolutePath(destinationPath);
+
+        await decompressBrotli(absoluteSourcePath, absoluteDestinationPath);
     }
 }
