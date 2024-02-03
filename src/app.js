@@ -21,7 +21,7 @@ const handleInput = async (chunk) => {
             await fileManager.changePath(command.arguments[0]);
         } else if (command.name.equals(CommandName.ls) && command.arguments.length == 0) {
             let directoryContents = await fileManager.directoryContents();
-            console.log(directoryContents);
+            console.table(directoryContents);
         }
         else {
             throw new Error(`[incorrect command] ${command.name.rawValue} ${command.arguments}`);

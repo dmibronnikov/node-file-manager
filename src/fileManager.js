@@ -26,6 +26,8 @@ export class FileManager {
     }
 
     async directoryContents() {
-        return await readdir(this.currentPath, { withFileTypes: true });
+        return (await readdir(this.currentPath, { withFileTypes: true })).map((value) => {
+            return { name: value.name, type: value.isDirectory() ? 'directory' : 'file' };
+        });
     }
 }
