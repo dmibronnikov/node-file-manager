@@ -42,9 +42,22 @@ export class FileManager {
     }
 
     async directoryContents() {
-        return (await readdir(this.currentPath, { withFileTypes: true })).map((value) => {
-            return { name: value.name, type: value.isDirectory() ? 'directory' : 'file' };
+        const directory = 'directory';
+        const file = 'file';
+
+        let directoryContents = (await readdir(this.currentPath, { withFileTypes: true })).map((value) => {
+            return { name: value.name, type: value.isDirectory() ? directory : file };
         });
+        
+        let directories = directoryContents.filter((value) => {
+            return value.type === directory;
+        }).sort((left, right) => { left.name.localeCompare(right.name); });
+
+        let files = directoryContents.filter((value) => {
+            return value.type === file;
+        }).sort((left, right) => { left.name.localeCompare(right.name); });
+
+        return [].concat(directories, files);
     }
 
     readFileStream(path) {
